@@ -90,6 +90,32 @@ image = pipe(
 image.save("example.png")
 ```
 
+## Running with quantization
+
+If you're working with a resource-constained environment, consider applying quantization. Below, we provide a snippet of using the NF4 quantization scheme through `bitsandbytes`. 
+
+```py
+# make sure bitsandbytes is installed: `pip install -U bitsandbytes
+
+from diffusers import DiffusionPipeline, PipelineQuantizationConfig
+import torch
+
+quant_config = PipelineQuantizationConfig(
+    quant_backend="bitsandbytes_4bit",
+    quant_kwargs={"load_in_4bit": True, "bnb_4bit_quant_type": "nf4", "bnb_4bit_compute_dtype": torch.bfloat16},
+    components_to_quantize=["transformer", "text_encoder"],
+)
+pipe = DiffusionPipeline.from_pretrained(
+	"Qwen/Qwen-Image",
+	quantization_config=quant_config,
+	torch_dtype=torch.bfloat16
+).to("cuda")
+
+prompt = "A cat holding a sign that says hello world"
+image = pipe(prompt, num_inference_steps=4, guidance_scale=0.0).images[0]
+image.save("qwenimage_nf4.png")
+```
+
 ## Show Cases
 
 One of its standout capabilities is high-fidelity text rendering across diverse images. Whether it’s alphabetic languages like English or logographic scripts like Chinese, Qwen-Image preserves typographic details, layout coherence, and contextual harmony with stunning accuracy. Text isn’t just overlaid—it’s seamlessly integrated into the visual fabric.
