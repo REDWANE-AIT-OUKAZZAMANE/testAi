@@ -4,6 +4,7 @@ language:
 - en
 - zh
 library_name: diffusers
+pipeline_tag: text-to-image
 ---
 <p align="center">
     <img src="https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/qwen_image_logo.png" width="400"/>
