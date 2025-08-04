@@ -24,7 +24,7 @@ We are thrilled to release **Qwen-Image**, an image generation foundation model 
 ![](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/bench.png#center)
 
 ## News
-- 2025.08.04: We released [Qwen-Image Tech Report]().
+- 2025.08.04: We released [Qwen-Image Tech Report](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf).
 - 2025.08.04: We released Qwen-Image weights! Check at [huggingface](https://huggingface.co/Qwen/Qwen-Image) and [Modelscope](https://modelscope.cn/models/Qwen/Qwen-Image)!
 - 2025.08.04: We released Qwen-Image! Check our [blog](https://qwenlm.github.io/blog/qwen-image) for more details!
 
