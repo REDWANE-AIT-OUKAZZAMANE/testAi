@@ -15,7 +15,7 @@ library_name: diffusers
 </p>
 
 <p align="center">
-    <img src="https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/merge.png" width="1600"/>
+    <img src="https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/merge3.png" width="1600"/>
 <p>
 
 ## Introduction
@@ -24,7 +24,7 @@ We are thrilled to release **Qwen-Image**, an image generation foundation model 
 ![](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/bench.png#center)
 
 ## News
-- 2025.08.04: We released [Qwen-Image Tech Report]().
+- 2025.08.04: We released the [Technical Report](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf) of Qwen-Image!
 - 2025.08.04: We released Qwen-Image weights! Check at [huggingface](https://huggingface.co/Qwen/Qwen-Image) and [Modelscope](https://modelscope.cn/models/Qwen/Qwen-Image)!
 - 2025.08.04: We released Qwen-Image! Check our [blog](https://qwenlm.github.io/blog/qwen-image) for more details!
 
@@ -55,8 +55,10 @@ else:
 pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch_dtype)
 pipe = pipe.to(device)
 
-positive_magic = "Ultra HD, 4K, cinematic composition." # for english prompt
-# positive_magic = "超清，4K，电影级构图" # for chinese prompt
+positive_magic = [
+    "en": "Ultra HD, 4K, cinematic composition." # for english prompt,
+    "zh": "超清，4K，电影级构图" # for chinese prompt,
+]
 
 # Generate image
 prompt = '''A coffee shop entrance features a chalkboard sign reading "Qwen Coffee 😊 $2 per cup," with a neon light beside it displaying "通义千问". Next to it hangs a poster showing a beautiful Chinese woman, and beneath the poster is written "π≈3.1415926-53589793-23846264-33832795-02384197". Ultra HD, 4K, cinematic composition'''
@@ -76,7 +78,8 @@ aspect_ratios = {
 width, height = aspect_ratios["16:9"]
 
 image = pipe(
-    prompt=prompt + positive_magic,
+    prompt=prompt + positive_magic["en"],
+    negative_prompt=negative_prompt,
     width=width,
     height=height,
     num_inference_steps=50,
