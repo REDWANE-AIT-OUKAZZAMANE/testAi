@@ -127,13 +127,3 @@ We kindly encourage citation of our work if you find it useful.
     year={2025}
 }
 ```
-
-
-## Contact and Join Us
-
-
-If you'd like to get in touch with our research team, we’d love to hear from you! Join our [Discord](https://discord.gg/z3GAxXZ9Ce) or scan the QR code to connect via our [WeChat groups](assets/wechat.png) — we’re always open to discussion and collaboration.
-
-If you have questions about this repository, feedback to share, or want to contribute directly, we welcome your issues and pull requests on GitHub. Your contributions help make Qwen-Image better for everyone. 
-
-If you’re passionate about fundamental research, we’re hiring full-time employees (FTEs) and research interns. Don’t wait — reach out to us at fulai.hr@alibaba-inc.com
