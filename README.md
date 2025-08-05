@@ -91,6 +91,120 @@ image = pipe(
 image.save("example.png")
 ```
 
+## Running with quantization (24GB and 16GB GPUs)
+
+If you're working with a resource-constained environment, consider applying quantization. Below, we provide two snippets of code using different quantization schemes for 24GB and 16GB GPUs.
+
+### 24GB VRAM GPU and `torchao`
+
+```py
+# make sure torchao is installed: `pip install -U torchao
+import torch
+
+from diffusers import AutoModel, DiffusionPipeline, TorchAoConfig
+
+
+model_id = "Qwen/Qwen-Image"
+torch_dtype = torch.bfloat16
+device = "cuda"
+
+quantization_config = TorchAoConfig("int8wo")
+
+transformer = AutoModel.from_pretrained(
+    model_id,
+    subfolder="transformer",
+    quantization_config=quantization_config,
+    torch_dtype=torch_dtype,
+)
+pipe = DiffusionPipeline.from_pretrained(model_id, transformer=transformer, torch_dtype=torch_dtype)
+pipe.enable_model_cpu_offload()
+
+prompt = "a woman and a man sitting at a cafe, the woman has red hair and she's wearing purple sweater with a black scarf and a white hat, the man is sitting on the other side of the table and he's wearing a white shirt with a purple scarf and red hat, both of them are sipping their coffee while in the table there's some cake slices on their respective plates, each with forks and knives at each side."
+negative_prompt = ""
+
+generator = torch.Generator(device="cuda").manual_seed(42)
+
+image = pipe(
+    prompt=prompt,
+    negative_prompt=negative_prompt,
+    width=1664,
+    height=928,
+    num_inference_steps=25,
+    true_cfg_scale=4.0,
+    generator=generator,
+).images[0]
+
+image.save("qwen_torchao.png")
+```
+
+### 16GB VRAM GPU and `bitsandbytes`
+
+```py
+# make sure bitsandbytes is installed: `pip install -U bitsandbytes
+import torch
+from transformers import BitsAndBytesConfig as TransformersBitsAndBytesConfig
+from transformers import Qwen2_5_VLForConditionalGeneration
+
+from diffusers import BitsAndBytesConfig as DiffusersBitsAndBytesConfig
+from diffusers import QwenImagePipeline, QwenImageTransformer2DModel
+
+
+model_id = "Qwen/Qwen-Image"
+torch_dtype = torch.bfloat16
+device = "cuda"
+
+quantization_config = DiffusersBitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    llm_int8_skip_modules=["transformer_blocks.0.img_mod"],
+)
+
+transformer = QwenImageTransformer2DModel.from_pretrained(
+    model_id,
+    subfolder="transformer",
+    quantization_config=quantization_config,
+    torch_dtype=torch_dtype,
+)
+transformer = transformer.to("cpu")
+
+quantization_config = TransformersBitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+
+text_encoder = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+    model_id,
+    subfolder="text_encoder",
+    quantization_config=quantization_config,
+    torch_dtype=torch_dtype,
+)
+text_encoder = text_encoder.to("cpu")
+
+pipe = QwenImagePipeline.from_pretrained(
+    model_id, transformer=transformer, text_encoder=text_encoder, torch_dtype=torch_dtype
+)
+pipe.enable_model_cpu_offload()
+
+prompt = "a woman and a man sitting at a cafe, the woman has red hair and she's wearing purple sweater with a black scarf and a white hat, the man is sitting on the other side of the table and he's wearing a white shirt with a purple scarf and red hat, both of them are sipping their coffee while in the table there's some cake slices on their respective plates, each with forks and knives at each side."
+negative_prompt = ""
+
+generator = torch.Generator(device="cuda").manual_seed(42)
+
+image = pipe(
+    prompt=prompt,
+    negative_prompt=negative_prompt,
+    width=1664,
+    height=928,
+    num_inference_steps=25,
+    true_cfg_scale=4.0,
+    generator=generator,
+).images[0]
+
+image.save("qwen_bnb.png")
+```
+
 ## Show Cases
 
 One of its standout capabilities is high-fidelity text rendering across diverse images. Whether it’s alphabetic languages like English or logographic scripts like Chinese, Qwen-Image preserves typographic details, layout coherence, and contextual harmony with stunning accuracy. Text isn’t just overlaid—it’s seamlessly integrated into the visual fabric.
