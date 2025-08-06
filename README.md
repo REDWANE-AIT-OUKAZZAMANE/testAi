@@ -2,7 +2,7 @@
 license: apache-2.0
 language:
 - en
-- zh
+- ru
 library_name: diffusers
 pipeline_tag: text-to-image
 ---
