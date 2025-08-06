@@ -25,7 +25,7 @@ We are thrilled to release **Qwen-Image**, an image generation foundation model 
 ![](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/bench.png#center)
 
 ## News
-- 2025.08.04: We released the [Technical Report](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/Qwen_Image.pdf) of Qwen-Image!
+- 2025.08.04: We released the [Technical Report](https://arxiv.org/abs/2508.02324) of Qwen-Image!
 - 2025.08.04: We released Qwen-Image weights! Check at [huggingface](https://huggingface.co/Qwen/Qwen-Image) and [Modelscope](https://modelscope.cn/models/Qwen/Qwen-Image)!
 - 2025.08.04: We released Qwen-Image! Check our [blog](https://qwenlm.github.io/blog/qwen-image) for more details!
 
@@ -56,15 +56,15 @@ else:
 pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch_dtype)
 pipe = pipe.to(device)
 
-positive_magic = [
+positive_magic = {
     "en": "Ultra HD, 4K, cinematic composition." # for english prompt,
     "zh": "超清，4K，电影级构图" # for chinese prompt,
-]
+}
 
 # Generate image
 prompt = '''A coffee shop entrance features a chalkboard sign reading "Qwen Coffee 😊 $2 per cup," with a neon light beside it displaying "通义千问". Next to it hangs a poster showing a beautiful Chinese woman, and beneath the poster is written "π≈3.1415926-53589793-23846264-33832795-02384197". Ultra HD, 4K, cinematic composition'''
 
-negative_prompt = " "
+negative_prompt = " " # using an empty string if you do not have specific concept to remove
 
 
 # Generate with different aspect ratios
@@ -73,7 +73,9 @@ aspect_ratios = {
     "16:9": (1664, 928),
     "9:16": (928, 1664),
     "4:3": (1472, 1140),
-    "3:4": (1140, 1472)
+    "3:4": (1140, 1472),
+    "3:2": (1584, 1056),
+    "2:3": (1056, 1584),
 }
 
 width, height = aspect_ratios["16:9"]
@@ -121,10 +123,13 @@ Qwen-Image is licensed under Apache 2.0.
 We kindly encourage citation of our work if you find it useful.
 
 ```bibtex
-@article{qwen-image,
-    title={Qwen-Image Technical Report}, 
-    author={Qwen Team},
-    journal={arXiv preprint},
-    year={2025}
+@misc{wu2025qwenimagetechnicalreport,
+      title={Qwen-Image Technical Report}, 
+      author={Chenfei Wu and Jiahao Li and Jingren Zhou and Junyang Lin and Kaiyuan Gao and Kun Yan and Sheng-ming Yin and Shuai Bai and Xiao Xu and Yilei Chen and Yuxiang Chen and Zecheng Tang and Zekai Zhang and Zhengyi Wang and An Yang and Bowen Yu and Chen Cheng and Dayiheng Liu and Deqing Li and Hang Zhang and Hao Meng and Hu Wei and Jingyuan Ni and Kai Chen and Kuan Cao and Liang Peng and Lin Qu and Minggang Wu and Peng Wang and Shuting Yu and Tingkun Wen and Wensen Feng and Xiaoxiao Xu and Yi Wang and Yichang Zhang and Yongqiang Zhu and Yujia Wu and Yuxuan Cai and Zenan Liu},
+      year={2025},
+      eprint={2508.02324},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2508.02324}, 
 }
 ```
