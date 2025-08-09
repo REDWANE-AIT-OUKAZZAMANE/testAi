@@ -5,6 +5,11 @@ language:
 - zh
 library_name: diffusers
 pipeline_tag: text-to-image
+datasets:
+- fka/awesome-chatgpt-prompts
+base_model:
+- openai/gpt-oss-120b
+new_version: openai/gpt-oss-120b
 ---
 <p align="center">
     <img src="https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-Image/qwen_image_logo.png" width="400"/>
